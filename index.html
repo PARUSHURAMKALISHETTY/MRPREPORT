@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BorrowBox — Operational Analytics System | Group 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & VARS ────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080f;
+  --surface:#0d1020;
+  --card:#111625;
+  --card2:#151b2e;
+  --border:#1e2840;
+  --blue:#4f8ef7;
+  --teal:#27d9c8;
+  --orange:#f7823a;
+  --red:#f04f4f;
+  --green:#2ecc8e;
+  --purple:#9b7ff7;
+  --yellow:#f7c948;
+  --white:#eef1fc;
+  --muted:#8896bb;
+  --dim:#3d4f6e;
+  --glow-blue:rgba(79,142,247,0.18);
+  --glow-teal:rgba(39,217,200,0.15);
+  font-size:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:'DM Sans',sans-serif;
+  font-weight:400;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────── */
+h1,h2,h3,h4{font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.label{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+
+/* ── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 48px;
+  background:rgba(7,8,15,0.82);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--teal)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--teal)}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(79,142,247,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, rgba(39,217,200,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 40% at 20% 80%, rgba(155,127,247,0.07) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(79,142,247,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(39,217,200,0.08);
+  border:1px solid rgba(39,217,200,0.25);
+  padding:6px 16px;border-radius:100px;
+  margin-bottom:28px;
+  animation:fadeUp .8s ease both;
+}
+.hero-tag-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero-title{
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  font-weight:800;
+  letter-spacing:-.03em;
+  margin-bottom:16px;
+  animation:fadeUp .8s .1s ease both;
+}
+.hero-title .accent{
+  background:linear-gradient(135deg,var(--blue),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:1.15rem;color:var(--muted);max-width:640px;margin:0 auto 40px;
+  animation:fadeUp .8s .2s ease both;
+}
+.hero-ctas{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp .8s .3s ease both;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--blue),var(--teal));
+  color:#07080f;font-weight:700;font-family:'Syne',sans-serif;
+  padding:13px 28px;border-radius:8px;text-decoration:none;font-size:.9rem;
+  letter-spacing:.02em;transition:opacity .2s,transform .2s;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-outline{
+  border:1px solid var(--border);color:var(--muted);
+  padding:13px 28px;border-radius:8px;text-decoration:none;font-size:.9rem;
+  font-weight:500;transition:all .2s;
+}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.hero-stats{
+  display:flex;gap:40px;justify-content:center;flex-wrap:wrap;
+  margin-top:72px;padding-top:48px;border-top:1px solid var(--border);
+  animation:fadeUp .8s .4s ease both;
+}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--white)}
+.hero-stat-label{font-size:.8rem;color:var(--muted);margin-top:2px}
+.team-chips{
+  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  margin-top:24px;animation:fadeUp .8s .5s ease both;
+}
+.chip{
+  background:var(--card);border:1px solid var(--border);
+  padding:5px 14px;border-radius:100px;font-size:.8rem;color:var(--muted);
+}
+.chip strong{color:var(--white);font-weight:500}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ── SECTIONS ─────────────────────────────────────────────── */
+section{padding:96px 24px;position:relative}
+.container{max-width:1140px;margin:0 auto}
+.section-header{margin-bottom:56px}
+.section-header h2{font-size:clamp(1.9rem,4vw,2.8rem);margin-top:10px}
+.section-header p{color:var(--muted);font-size:1.05rem;max-width:580px;margin-top:12px}
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 auto;max-width:900px}
+
+/* ── CARDS ─────────────────────────────────────────────────── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--teal));opacity:0;transition:opacity .3s}
+.card:hover::before{opacity:1}
+
+/* ── PROBLEM ─────────────────────────────────────────────── */
+#problem{background:linear-gradient(180deg,var(--bg),var(--surface))}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.problem-cascade{display:flex;align-items:center;gap:0;margin:40px 0;flex-wrap:wrap;gap:8px}
+.cascade-step{
+  flex:1;min-width:140px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:20px 16px;text-align:center;position:relative;
+}
+.cascade-step.bad{border-color:rgba(240,79,79,.3);background:rgba(240,79,79,.04)}
+.cascade-step .step-icon{font-size:1.6rem;margin-bottom:8px}
+.cascade-step h4{font-size:.9rem;font-family:'Syne',sans-serif;font-weight:700}
+.cascade-step p{font-size:.78rem;color:var(--muted);margin-top:4px}
+.cascade-arrow{color:var(--dim);font-size:1.4rem;flex-shrink:0;align-self:center}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 20px;text-align:center}
+.stat-box .num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800}
+.stat-box .lbl{font-size:.78rem;color:var(--muted);margin-top:4px}
+
+/* ── STAKEHOLDER CARDS ───────────────────────────────────── */
+.stakeholder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.stakeholder-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+.stakeholder-card .s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px}
+.stakeholder-card h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:6px}
+.stakeholder-card p{font-size:.82rem;color:var(--muted);line-height:1.55}
+
+/* ── DATA SECTION ────────────────────────────────────────── */
+#data{background:var(--surface)}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.rule-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.rule-item{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
+.rule-num{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:800;color:var(--teal);width:22px;flex-shrink:0;margin-top:1px}
+.rule-text{font-size:.83rem;color:var(--muted);line-height:1.5}
+.rule-text strong{color:var(--white);font-weight:500}
+.var-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.var-tag{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.78rem}
+.var-tag span{color:var(--teal);font-weight:600}
+
+/* ── DASHBOARD SECTION ───────────────────────────────────── */
+#dashboard{background:var(--bg)}
+.dashboard-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.dtab{
+  background:var(--card);border:1px solid var(--border);
+  padding:8px 18px;border-radius:100px;font-size:.83rem;font-weight:500;
+  color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.dtab.active,.dtab:hover{background:var(--blue);border-color:var(--blue);color:#07080f;font-weight:700}
+.dashboard-frame{
+  border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 0 80px rgba(79,142,247,0.1);
+}
+.dashboard-preview{
+  background:var(--card);
+  padding:20px;
+  min-height:380px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.insight-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:32px}
+.insight-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+.insight-box .i-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.insight-box h4{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;margin-bottom:6px}
+.insight-box p{font-size:.82rem;color:var(--muted);line-height:1.55}
+
+/* ── KPI SECTION ─────────────────────────────────────────── */
+#kpis{background:var(--surface)}
+.kpi-grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:32px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 16px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-card.c1::before{background:var(--red)} .kpi-card.c2::before{background:var(--orange)}
+.kpi-card.c3::before{background:var(--yellow)} .kpi-card.c4::before{background:var(--purple)} .kpi-card.c5::before{background:var(--blue)}
+.kpi-card .acronym{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.12em;color:var(--dim);margin-bottom:4px}
+.kpi-card .kpi-name{font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.kpi-card .kpi-val{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;margin-bottom:4px}
+.kpi-card .kpi-formula{font-size:.68rem;color:var(--dim);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-style:italic}
+
+/* ── SOLUTION SECTION ────────────────────────────────────── */
+#solution{background:var(--bg)}
+.solution-split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.screen-list{display:flex;flex-direction:column;gap:10px}
+.screen-item{
+  display:flex;align-items:center;gap:16px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:16px 20px;
+  transition:all .2s;cursor:default;
+}
+.screen-item:hover{border-color:var(--teal);transform:translateX(4px)}
+.screen-item.highlight{border-color:rgba(240,79,79,.4);background:rgba(240,79,79,.04)}
+.screen-num{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:800;color:var(--dim);width:28px;flex-shrink:0}
+.screen-info h4{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700}
+.screen-info p{font-size:.8rem;color:var(--muted);margin-top:2px}
+.screen-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+
+/* ── ARCHITECTURE ────────────────────────────────────────── */
+#architecture{background:var(--surface)}
+.arch-img{
+  border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 0 60px rgba(79,142,247,0.08);
+  margin-bottom:32px;
+}
+.arch-img img{width:100%;display:block}
+.arch-layers{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.arch-layer{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 14px;text-align:center}
+.arch-layer .l-num{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:800;color:var(--teal);margin-bottom:6px}
+.arch-layer h4{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;margin-bottom:4px}
+.arch-layer p{font-size:.72rem;color:var(--muted);line-height:1.5}
+
+/* ── COMPARISON SECTION ──────────────────────────────────── */
+#comparison{background:var(--bg)}
+.comparison-header-cards{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-bottom:40px}
+.comp-side{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px}
+.comp-side.before{border-color:rgba(240,79,79,.25)}
+.comp-side.after{border-color:rgba(46,204,142,.25)}
+.comp-side h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:16px}
+.comp-vs{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--dim);text-align:center}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.metric-row:last-child{border-bottom:none}
+.metric-row .m-name{font-size:.82rem;color:var(--muted)}
+.metric-row .m-val{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700}
+.improvement-bars{display:flex;flex-direction:column;gap:14px;margin-top:32px}
+.imp-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+.imp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.imp-header .i-name{font-size:.85rem;color:var(--muted)}
+.imp-header .i-pct{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;color:var(--green)}
+.imp-bar-bg{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.imp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--green));transition:width 1.5s ease}
+.imp-vals{display:flex;justify-content:space-between;margin-top:6px}
+.imp-vals span{font-size:.75rem;color:var(--dim)}
+.imp-vals .v-after{color:var(--green);font-weight:600}
+
+/* ── ETHICAL ─────────────────────────────────────────────── */
+#ethical{background:var(--surface)}
+.ethical-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.ethical-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.ethical-card .e-icon{font-size:1.8rem;margin-bottom:14px}
+.ethical-card h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px}
+.ethical-card p{font-size:.83rem;color:var(--muted);line-height:1.6}
+
+/* ── LESSONS ─────────────────────────────────────────────── */
+#lessons{background:var(--bg)}
+.lessons-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.lesson-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px}
+.lesson-card h4{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:12px}
+.lesson-card p{font-size:.85rem;color:var(--muted);line-height:1.65}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:20px;padding-bottom:24px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-left{display:flex;flex-direction:column;align-items:center;gap:0;width:36px;flex-shrink:0}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--teal);background:var(--bg);flex-shrink:0;z-index:1;margin-top:4px}
+.tl-line{flex:1;width:2px;background:var(--border)}
+.tl-item:last-child .tl-line{display:none}
+.tl-content h5{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;margin-bottom:4px}
+.tl-content p{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ── TEAM ─────────────────────────────────────────────────── */
+#team{background:var(--surface);padding:80px 24px}
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 16px;text-align:center;transition:all .3s}
+.team-card:hover{transform:translateY(-4px);border-color:var(--teal)}
+.team-avatar{width:56px;height:56px;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800}
+.team-card h4{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:4px}
+.team-card .role{font-size:.75rem;color:var(--teal);font-weight:600;margin-bottom:6px}
+.team-card .tasks{font-size:.73rem;color:var(--dim);line-height:1.5}
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:48px 24px;text-align:center}
+footer .f-logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:8px}
+footer .f-logo span{color:var(--teal)}
+footer p{font-size:.83rem;color:var(--dim);margin-top:8px}
+footer .f-links{display:flex;gap:24px;justify-content:center;margin-top:20px}
+footer .f-links a{font-size:.83rem;color:var(--muted);text-decoration:none;transition:color .2s}
+footer .f-links a:hover{color:var(--teal)}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .problem-grid,.data-grid,.solution-split,.lessons-grid,.insight-grid,.ethical-grid{grid-template-columns:1fr}
+  .kpi-grid-5{grid-template-columns:repeat(2,1fr)}
+  .arch-layers{grid-template-columns:repeat(2,1fr)}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .comparison-header-cards{grid-template-columns:1fr}
+  .comp-vs{display:none}
+}
+
+/* ── ANIMATED COUNTER ────────────────────────────────────── */
+.count-up{display:inline-block}
+
+/* ── GLOW ACCENTS ────────────────────────────────────────── */
+.glow-blue{box-shadow:0 0 40px rgba(79,142,247,0.12)}
+.glow-teal{box-shadow:0 0 40px rgba(39,217,200,0.1)}
+
+/* ── HIGHLIGHT CALLOUT ───────────────────────────────────── */
+.callout{
+  border-left:3px solid var(--teal);
+  background:rgba(39,217,200,0.05);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;
+  font-size:.88rem;color:var(--white);
+  margin:16px 0;line-height:1.6;
+}
+.callout.red{border-color:var(--red);background:rgba(240,79,79,0.05)}
+.callout.green{border-color:var(--green);background:rgba(46,204,142,0.05)}
+
+/* ── EMBED IFRAME ────────────────────────────────────────── */
+.embed-frame{
+  width:100%;height:520px;border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);background:var(--card);
+  box-shadow:0 0 80px rgba(79,142,247,0.1);
+}
+.embed-frame iframe{width:100%;height:100%;border:none;display:block}
+.embed-fallback{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:16px;text-align:center;
+}
+.embed-fallback a{
+  background:linear-gradient(135deg,var(--blue),var(--teal));
+  color:#07080f;font-weight:700;font-family:'Syne',sans-serif;
+  padding:12px 28px;border-radius:8px;text-decoration:none;font-size:.9rem;
+}
+
+/* ── SCROLL REVEAL ───────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Borrow<span>Box</span></a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#comparison">Results</a></li>
+    <li><a href="#lessons">Reflection</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-tag">
+    <span class="hero-tag-dot"></span>
+    <span class="label">IS 5960 MRP &nbsp;|&nbsp; Saint Louis University &nbsp;|&nbsp; Group 3</span>
+  </div>
+  <h1 class="hero-title">Borrow<span class="accent">Box</span></h1>
+  <p style="font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:700;color:var(--muted);margin-bottom:12px;animation:fadeUp .8s .08s ease both">City-Wide Shared Equipment Lending</p>
+  <p class="hero-sub">Operational Analytics and Decision Support System — transforming reactive late-return management into proactive, data-driven operations across 5 community hubs.</p>
+  <div class="hero-ctas">
+    <a href="https://parushuramkalishetty.github.io/mrpdashboard" target="_blank" class="btn-primary">View Live Dashboard</a>
+    <a href="#problem" class="btn-outline">Explore Project</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num" style="color:var(--blue)">2,100</div>
+      <div class="hero-stat-label">Transactions Analysed</div>
+    </div>
+    <div>
+      <div class="hero-stat-num" style="color:var(--orange)">5</div>
+      <div class="hero-stat-label">Hub Locations</div>
+    </div>
+    <div>
+      <div class="hero-stat-num" style="color:var(--teal)">5</div>
+      <div class="hero-stat-label">KPIs Tracked</div>
+    </div>
+    <div>
+      <div class="hero-stat-num" style="color:var(--green)">50%</div>
+      <div class="hero-stat-label">LRR Reduction</div>
+    </div>
+    <div>
+      <div class="hero-stat-num" style="color:var(--purple)">64.9%</div>
+      <div class="hero-stat-label">At-Risk Detection Rate</div>
+    </div>
+  </div>
+  <div class="team-chips">
+    <span class="chip"><strong>Parushuram</strong> · PM</span>
+    <span class="chip"><strong>Lokesh</strong> · BA</span>
+    <span class="chip"><strong>Joel</strong> · DA</span>
+    <span class="chip"><strong>Mani</strong> · Tech</span>
+    <span class="chip"><strong>Sharmila</strong> · Prototype</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXECUTIVE SUMMARY (part of home per spec) -->
+<section style="background:var(--surface);padding:72px 24px">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Executive Summary</div>
+      <h2>The Problem, the Solution, the Impact</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px" class="reveal">
+      <div>
+        <p style="color:var(--muted);line-height:1.75;margin-bottom:18px">BorrowBox is a city-wide shared equipment lending service where residents reserve camping gear, tools, electronics, and household items from five hub locations. Equipment must be returned by a scheduled due date — but 23% of all 2,100 loans were returned late.</p>
+        <p style="color:var(--muted);line-height:1.75;margin-bottom:18px">Of those late returns, 63.7% caused a <strong style="color:var(--white)">reservation disruption</strong> — the next borrower arrived at a hub and found their item still checked out. The existing reminder system was tested and found <strong style="color:var(--red)">statistically ineffective</strong>: 22.7% late rate with reminder vs. 23.4% without — a 0.7% difference.</p>
+        <p style="color:var(--muted);line-height:1.75">Staff only discovered problems <em>after</em> due dates passed, forcing entirely reactive operations that could not prevent downstream failures.</p>
+      </div>
+      <div>
+        <div class="callout green" style="margin-bottom:14px"><strong>Solution:</strong> We built two integrated components — a 6-tab storytelling analytics dashboard and a 6-screen operational prototype — that give staff and administrators visibility into where, what, and why late returns happen, and a proactive At-Risk Return Monitor that flags items before the due date passes.</div>
+        <div class="callout" style="margin-bottom:14px"><strong>Result:</strong> Late Return Rate fell from 23.0% to 11.4% (-50.4%). Disruption Rate from 63.7% to 28.1% (-55.9%). Average delay from 51.5h to 18.2h (-64.7%). At-Risk Detection Rate rose from 0% to 64.9%. Staff Override Rate fell from 8.9% to 2.9% (-67.4%).</div>
+        <div class="callout red"><strong>Key finding:</strong> Camping equipment (31.2% LRR) and HUB5 (28.4% LRR) drive the majority of late returns. These two dimensions now receive the highest weights in the risk scoring formula.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 01 — Problem</div>
+      <h2>What Is Breaking and Why It Matters</h2>
+      <p>A late return does not just affect the borrower — it cascades into a failed reservation for the next person in the queue.</p>
+    </div>
+
+    <div class="problem-cascade reveal">
+      <div class="cascade-step bad">
+        <div class="step-icon">⏰</div>
+        <h4>Late Return</h4>
+        <p>Item not back by due date</p>
+      </div>
+      <div class="cascade-arrow">→</div>
+      <div class="cascade-step bad">
+        <div class="step-icon">🔔</div>
+        <h4>Staff Unaware</h4>
+        <p>Only discover after deadline</p>
+      </div>
+      <div class="cascade-arrow">→</div>
+      <div class="cascade-step bad">
+        <div class="step-icon">📦</div>
+        <h4>Item Missing</h4>
+        <p>Next reservation can't be fulfilled</p>
+      </div>
+      <div class="cascade-arrow">→</div>
+      <div class="cascade-step bad">
+        <div class="step-icon">😤</div>
+        <h4>Disruption</h4>
+        <p>User arrives and finds item gone</p>
+      </div>
+      <div class="cascade-arrow">→</div>
+      <div class="cascade-step bad">
+        <div class="step-icon">🛠</div>
+        <h4>Manual Override</h4>
+        <p>Staff spends time resolving manually</p>
+      </div>
+    </div>
+
+    <div class="stat-row reveal">
+      <div class="stat-box"><div class="num" style="color:var(--red)">23.0%</div><div class="lbl">Late Return Rate (LRR) — baseline</div></div>
+      <div class="stat-box"><div class="num" style="color:var(--orange)">63.7%</div><div class="lbl">Of late returns caused disruptions (RDR)</div></div>
+      <div class="stat-box"><div class="num" style="color:var(--yellow)">51.5h</div><div class="lbl">Average hours overdue (ARD) when late</div></div>
+      <div class="stat-box"><div class="num" style="color:var(--purple)">0%</div><div class="lbl">At-Risk Detection Rate — no system existed</div></div>
+      <div class="stat-box"><div class="num" style="color:var(--blue)">8.9%</div><div class="lbl">Staff Override Rate — 187 manual events</div></div>
+      <div class="stat-box"><div class="num" style="color:var(--orange)">0.7%</div><div class="lbl">Reminder system effect — not meaningful</div></div>
+    </div>
+
+    <div style="margin-top:48px" class="reveal">
+      <div class="label" style="margin-bottom:16px">Stakeholders Affected</div>
+      <div class="stakeholder-grid">
+        <div class="stakeholder-card">
+          <div class="s-icon" style="background:rgba(79,142,247,0.12)">🏙️</div>
+          <h4>City Administrators</h4>
+          <p>No consolidated view of hub or category performance. Cannot make evidence-based policy decisions or target resources to high-risk locations.</p>
+        </div>
+        <div class="stakeholder-card">
+          <div class="s-icon" style="background:rgba(39,217,200,0.12)">👷</div>
+          <h4>Hub Staff</h4>
+          <p>Only discover late returns after due dates pass. Must manually re-schedule reservations, contact borrowers, and source items from other hubs — 187 override events before the prototype.</p>
+        </div>
+        <div class="stakeholder-card">
+          <div class="s-icon" style="background:rgba(247,130,58,0.12)">👤</div>
+          <h4>Borrowers</h4>
+          <p>308 disruption events: users who reserved equipment in good faith arrived at a hub and could not collect it. 22% of disruptions were severe — user could not be served at all.</p>
+        </div>
+        <div class="stakeholder-card">
+          <div class="s-icon" style="background:rgba(155,127,247,0.12)">🎓</div>
+          <h4>Faculty Supervisor</h4>
+          <p>Dr. Tatiana Cardona — IS 5960 project sponsor. Provided structured feedback that shaped all deliverables throughout the semester.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DATA -->
+<section id="data" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 02 — Data</div>
+      <h2>2,100 Transactions. 22 Variables. 10 Rules.</h2>
+      <p>A synthetic dataset generated from APA-cited benchmark rules, designed to reflect realistic operational patterns in municipal lending programs.</p>
+    </div>
+    <div class="data-grid reveal">
+      <div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px">
+          <div class="label" style="margin-bottom:12px">Dataset at a Glance</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="padding:12px;background:var(--card2);border-radius:8px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--teal)">2,100</div><div style="font-size:.75rem;color:var(--muted)">Total Records</div></div>
+            <div style="padding:12px;background:var(--card2);border-radius:8px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--blue)">22</div><div style="font-size:.75rem;color:var(--muted)">Variables</div></div>
+            <div style="padding:12px;background:var(--card2);border-radius:8px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--orange)">5</div><div style="font-size:.75rem;color:var(--muted)">Hub Locations</div></div>
+            <div style="padding:12px;background:var(--card2);border-radius:8px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--purple)">5</div><div style="font-size:.75rem;color:var(--muted)">Equipment Categories</div></div>
+          </div>
+        </div>
+        <div class="label" style="margin-bottom:10px">Key Variables</div>
+        <div class="var-grid">
+          <div class="var-tag"><span>is_late</span> · Boolean flag</div>
+          <div class="var-tag"><span>delay_hours</span> · Numeric</div>
+          <div class="var-tag"><span>disruption</span> · Boolean</div>
+          <div class="var-tag"><span>staff_override</span> · Boolean</div>
+          <div class="var-tag"><span>risk_flag</span> · Boolean</div>
+          <div class="var-tag"><span>risk_score</span> · Numeric</div>
+          <div class="var-tag"><span>hub_id</span> · HUB1–HUB5</div>
+          <div class="var-tag"><span>category</span> · 5 types</div>
+          <div class="var-tag"><span>user_segment</span> · 3 types</div>
+          <div class="var-tag"><span>days_remaining</span> · Numeric</div>
+        </div>
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:12px">10 APA-Cited Generation Rules</div>
+        <ul class="rule-list">
+          <li class="rule-item"><span class="rule-num">01</span><span class="rule-text">Overall LRR calibrated to <strong>18–25% range</strong> — American Library Association (2022)</span></li>
+          <li class="rule-item"><span class="rule-num">02</span><span class="rule-text">Hub-level LRR variance: <strong>±8 percentage points</strong> around mean — Gartner (2021)</span></li>
+          <li class="rule-item"><span class="rule-num">03</span><span class="rule-text">Category risk weighting: <strong>Camping highest</strong>, Electronics lowest — Losada-Rojas et al. (2021)</span></li>
+          <li class="rule-item"><span class="rule-num">04</span><span class="rule-text">Seasonal peak in <strong>June–August: +15% LRR</strong> above annual mean — IEEE (2020)</span></li>
+          <li class="rule-item"><span class="rule-num">05</span><span class="rule-text">First-time borrowers: <strong>2× late return propensity</strong> vs. frequent — Pew Research (2022)</span></li>
+          <li class="rule-item"><span class="rule-num">06</span><span class="rule-text">Reminder effectiveness: <strong>&lt;1 percentage point difference</strong> — ACM (2021)</span></li>
+          <li class="rule-item"><span class="rule-num">07</span><span class="rule-text">Disruption severity: <strong>55% mild, 32% moderate, 13% severe</strong> — ALA (2022)</span></li>
+          <li class="rule-item"><span class="rule-num">08</span><span class="rule-text">Staff override rate: <strong>8–10%</strong> of all transactions — McKinsey (2020)</span></li>
+          <li class="rule-item"><span class="rule-num">09</span><span class="rule-text">Delay duration: <strong>log-normal, mean 51.5h</strong> — Syracuse iSchool (2021)</span></li>
+          <li class="rule-item"><span class="rule-num">10</span><span class="rule-text">Risk flag false positive rate: <strong>~50%</strong> — IEEE (2020)</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DASHBOARD -->
+<section id="dashboard" style="background:var(--bg)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 03 — Dashboard & Data Analysis</div>
+      <h2>Six Tabs. One Coherent Story.</h2>
+      <p>The analytics dashboard transforms 2,100 raw transactions into a six-chapter visual narrative — each tab answers one focused operational question.</p>
+    </div>
+
+    <div class="reveal" style="margin-bottom:32px">
+      <div class="embed-frame glow-blue">
+        <iframe id="dash-iframe" src="https://parushuramkalishetty.github.io/mrpdashboard" loading="lazy" title="BorrowBox Analytics Dashboard" allowfullscreen></iframe>
+        <div class="embed-fallback" style="display:none">
+          <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--muted)">Live Dashboard</div>
+          <p style="font-size:.85rem;color:var(--dim);max-width:300px">Click to open the full interactive BorrowBox analytics dashboard on GitHub Pages</p>
+          <a href="https://parushuramkalishetty.github.io/mrpdashboard" target="_blank">Open Dashboard</a>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:.8rem;color:var(--dim);margin-top:10px">Hosted at parushuramkalishetty.github.io/mrpdashboard — open in new tab for full experience</p>
+    </div>
+
+    <div class="insight-grid reveal">
+      <div class="insight-box">
+        <div class="i-label" style="color:var(--red)">Tab 1 + 2 — Where</div>
+        <h4>HUB5 is the Outlier</h4>
+        <p>HUB5 has an LRR of 28.4% — 5.4 points above the 23.0% system average. It also leads on disruptions (110 events) and ARD (62.3h). The same policy produces vastly different outcomes by location.</p>
+      </div>
+      <div class="insight-box">
+        <div class="i-label" style="color:var(--orange)">Tab 3 — What</div>
+        <h4>Camping, Not Tools</h4>
+        <p>Camping equipment has the highest LRR (31.2%) and longest ARD (68.4h). This corrected an early assumption that Tools would rank highest. Camping gear is taken on multi-day trips where exact return timing is hard to control.</p>
+      </div>
+      <div class="insight-box">
+        <div class="i-label" style="color:var(--yellow)">Tab 5 — Why Fix Reminders</div>
+        <h4>Reminders Don't Work</h4>
+        <p>Users with reminders: 22.7% late. Without: 23.4%. A 0.7% difference is not meaningful. Tab 5 is the analytical justification for replacing the passive reminder system with the At-Risk Monitor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- KPIs -->
+<section id="kpis" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 04 — Metrics for Success</div>
+      <h2>Five KPIs. All Derived from the Dataset.</h2>
+      <p>Each KPI is computed directly from variables in the 22-variable dataset. All five targets were achieved after prototype implementation.</p>
+    </div>
+    <div class="kpi-grid-5 reveal">
+      <div class="kpi-card c1">
+        <div class="acronym">KPI 1 — LRR</div>
+        <div class="kpi-name">Late Return Rate</div>
+        <div class="kpi-val" style="color:var(--red)">23.0%</div>
+        <div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">→ 11.4% after</div>
+        <div class="kpi-formula">LRR = (Σ is_late) / T × 100</div>
+      </div>
+      <div class="kpi-card c2">
+        <div class="acronym">KPI 2 — RDR</div>
+        <div class="kpi-name">Reservation Disruption Rate</div>
+        <div class="kpi-val" style="color:var(--orange)">63.7%</div>
+        <div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">→ 28.1% after</div>
+        <div class="kpi-formula">RDR = (Σ disruption) / (Σ is_late) × 100</div>
+      </div>
+      <div class="kpi-card c3">
+        <div class="acronym">KPI 3 — ARD</div>
+        <div class="kpi-name">Average Return Delay</div>
+        <div class="kpi-val" style="color:var(--yellow)">51.5h</div>
+        <div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">→ 18.2h after</div>
+        <div class="kpi-formula">ARD = Σ delay_hours / Σ is_late</div>
+      </div>
+      <div class="kpi-card c4">
+        <div class="acronym">KPI 4 — ARDR</div>
+        <div class="kpi-name">At-Risk Detection Rate</div>
+        <div class="kpi-val" style="color:var(--purple)">0%</div>
+        <div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">→ 64.9% after</div>
+        <div class="kpi-formula">ARDR = (Σ risk_flag ∩ is_late) / Σ is_late × 100</div>
+      </div>
+      <div class="kpi-card c5">
+        <div class="acronym">KPI 5 — SOR</div>
+        <div class="kpi-name">Staff Override Rate</div>
+        <div class="kpi-val" style="color:var(--blue)">8.9%</div>
+        <div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">→ 2.9% after</div>
+        <div class="kpi-formula">SOR = (Σ staff_override) / T × 100</div>
+      </div>
+    </div>
+    <div class="callout reveal" style="margin-top:0">
+      <strong>ARDR starts at 0%</strong> because before the prototype, the risk_flag variable did not exist — no monitoring system had ever been built. The At-Risk Monitor is an entirely new operational capability, not an improvement of an existing one. Rising from 0% to 64.9% means the system now catches nearly two-thirds of eventual late returns before the due date passes.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOLUTION -->
+<section id="solution" style="background:var(--bg)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 05 — Proposed Solution</div>
+      <h2>Two Components. One Integrated System.</h2>
+      <p>A six-tab analytics dashboard for administrators and a six-screen operational prototype for hub staff — built entirely with HTML5, CSS3, and the Canvas API.</p>
+    </div>
+    <div class="solution-split reveal">
+      <div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px">
+          <div class="label" style="color:var(--blue);margin-bottom:12px">Component 1 — Analytics Dashboard</div>
+          <p style="font-size:.87rem;color:var(--muted);margin-bottom:14px">A self-contained HTML5 file with Canvas API charts. No external dependencies. Works offline. Hosted free on GitHub Pages.</p>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border-radius:8px;font-size:.82rem"><span style="color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T1</span> Overview — All 5 KPI baseline values</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border-radius:8px;font-size:.82rem"><span style="color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T2</span> Hub Performance — Where is it worst?</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border-radius:8px;font-size:.82rem"><span style="color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T3</span> Equipment Categories — What is being returned late?</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border-radius:8px;font-size:.82rem"><span style="color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T4</span> Disruption Analysis — What is the cost?</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border-radius:8px;font-size:.82rem"><span style="color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T5</span> Reminder System — Is the current fix working?</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(46,204,142,0.08);border:1px solid rgba(46,204,142,0.25);border-radius:8px;font-size:.82rem"><span style="color:var(--green);font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem">T6</span> <strong style="color:var(--green)">Before vs After — All 5 KPIs compared</strong></div>
+          </div>
+        </div>
+        <a href="https://parushuramkalishetty.github.io/mrpdashboard" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);padding:12px 20px;border-radius:10px;text-decoration:none;color:var(--teal);font-size:.85rem;font-weight:600;transition:all .2s" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border)'">
+          ↗ Open Live Dashboard
+        </a>
+      </div>
+      <div>
+        <div class="label" style="color:var(--teal);margin-bottom:14px">Component 2 — Operational Prototype</div>
+        <div class="screen-list">
+          <div class="screen-item"><span class="screen-num">S1</span><div class="screen-info"><h4>Dashboard Home</h4><p>Daily summary: reservations, overdue count, alert status</p></div></div>
+          <div class="screen-item"><span class="screen-num">S2</span><div class="screen-info"><h4>Reservations List</h4><p>Sortable by due date, overdue items clearly flagged</p></div></div>
+          <div class="screen-item"><span class="screen-num">S3</span><div class="screen-info"><h4>Reservation Detail</h4><p>All 22 variables, action buttons: mark returned, log disruption</p></div></div>
+          <div class="screen-item highlight"><span class="screen-num" style="color:var(--red)">S4</span><div class="screen-info"><h4>At-Risk Return Monitor ★</h4><p>Risk Score = Wc + Wh + (1/R) + Wu — flags items before due date</p></div><span class="screen-badge">NEW</span></div>
+          <div class="screen-item"><span class="screen-num">S5</span><div class="screen-info"><h4>Hub Performance Summary</h4><p>Local KPI metrics vs. system average for hub managers</p></div></div>
+          <div class="screen-item"><span class="screen-num">S6</span><div class="screen-info"><h4>Disruption Log</h4><p>All disruption events with resolution tracking and accountability</p></div></div>
+        </div>
+        <div style="margin-top:16px;background:rgba(240,79,79,0.06);border:1px solid rgba(240,79,79,0.2);border-radius:10px;padding:14px 16px;font-size:.83rem;color:var(--muted)">
+          <strong style="color:var(--red)">Risk Score Formula:</strong><br>
+          Score = Wc + Wh + (1/R) + Wu<br>
+          <span style="font-size:.78rem">Wc: Camping=4, Tools=2, Others=1 &nbsp;|&nbsp; Wh: HUB5=3, HUB3=2, Others=1<br>Wu: First-time=2, Occasional=1, Frequent=0.5 &nbsp;|&nbsp; Flag if Score ≥ 7.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div style="margin-top:48px" class="reveal">
+      <div class="label" style="margin-bottom:16px">Technology Stack</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--blue)">HTML5</strong> · Structure</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--blue)">CSS3</strong> · Styling</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--teal)">Canvas API</strong> · All charts (zero external libraries)</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--purple)">Python 3</strong> · Data processing</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--orange)">Flask</strong> · Web API</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--orange)">MySQL</strong> · Database (5 tables)</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.82rem"><strong style="color:var(--green)">GitHub Pages</strong> · Hosting (free, instant deploy)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 06 — Enterprise Architecture</div>
+      <h2>Five Layers. End-to-End System Design.</h2>
+    </div>
+    <div class="arch-img reveal glow-blue">
+      <img id="ea-img" src="https://parushuramkalishetty.github.io/mrpdashboard/ea.png" alt="BorrowBox Enterprise Architecture Diagram"/>
+    </div>
+    <div class="arch-layers reveal">
+      <div class="arch-layer"><div class="l-num">LAYER 1</div><h4>Users & Actors</h4><p>City Admins, Hub Staff, Borrowers, Data Analyst, Faculty Supervisor</p></div>
+      <div class="arch-layer"><div class="l-num">LAYER 2</div><h4>Interface</h4><p>Analytics Dashboard, Operational Prototype, At-Risk Notification System</p></div>
+      <div class="arch-layer"><div class="l-num">LAYER 3</div><h4>Application</h4><p>Python Engine, Flask API, Risk Scoring Engine, Reporting Engine</p></div>
+      <div class="arch-layer"><div class="l-num">LAYER 4</div><h4>Data</h4><p>MySQL DB, Synthetic CSV Dataset, Before Data Store, After Data Store</p></div>
+      <div class="arch-layer"><div class="l-num">LAYER 5</div><h4>Infrastructure</h4><p>GitHub Pages, Git/GitHub, Render (Flask), Browser Runtime (offline)</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPARISON -->
+<section id="comparison" style="background:var(--bg)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 07 — Before vs After</div>
+      <h2>Every KPI Improved. Targets Exceeded.</h2>
+      <p>Dataset 1 established the baseline. Dataset 2 simulates post-prototype operations with the At-Risk Monitor, hub alerts, and category-specific policies active.</p>
+    </div>
+
+    <div class="comparison-header-cards reveal">
+      <div class="comp-side before">
+        <h3 style="color:var(--red)">Before Prototype</h3>
+        <div class="metric-row"><span class="m-name">LRR (Late Return Rate)</span><span class="m-val" style="color:var(--red)">23.0%</span></div>
+        <div class="metric-row"><span class="m-name">RDR (Disruption Rate)</span><span class="m-val" style="color:var(--red)">63.7%</span></div>
+        <div class="metric-row"><span class="m-name">ARD (Avg Delay)</span><span class="m-val" style="color:var(--red)">51.5 hrs</span></div>
+        <div class="metric-row"><span class="m-name">ARDR (At-Risk Detection)</span><span class="m-val" style="color:var(--red)">0%</span></div>
+        <div class="metric-row"><span class="m-name">SOR (Override Rate)</span><span class="m-val" style="color:var(--red)">8.9%</span></div>
+        <div class="metric-row"><span class="m-name">HUB5 LRR</span><span class="m-val" style="color:var(--red)">28.4%</span></div>
+        <div class="metric-row"><span class="m-name">Camping LRR</span><span class="m-val" style="color:var(--red)">31.2%</span></div>
+        <div class="metric-row"><span class="m-name">Staff Overrides</span><span class="m-val" style="color:var(--red)">187 events</span></div>
+      </div>
+      <div class="comp-vs">VS</div>
+      <div class="comp-side after">
+        <h3 style="color:var(--green)">After Prototype</h3>
+        <div class="metric-row"><span class="m-name">LRR (Late Return Rate)</span><span class="m-val" style="color:var(--green)">11.4%</span></div>
+        <div class="metric-row"><span class="m-name">RDR (Disruption Rate)</span><span class="m-val" style="color:var(--green)">28.1%</span></div>
+        <div class="metric-row"><span class="m-name">ARD (Avg Delay)</span><span class="m-val" style="color:var(--green)">18.2 hrs</span></div>
+        <div class="metric-row"><span class="m-name">ARDR (At-Risk Detection)</span><span class="m-val" style="color:var(--green)">64.9%</span></div>
+        <div class="metric-row"><span class="m-name">SOR (Override Rate)</span><span class="m-val" style="color:var(--green)">2.9%</span></div>
+        <div class="metric-row"><span class="m-name">HUB5 LRR</span><span class="m-val" style="color:var(--green)">12.1%</span></div>
+        <div class="metric-row"><span class="m-name">Camping LRR</span><span class="m-val" style="color:var(--green)">13.8%</span></div>
+        <div class="metric-row"><span class="m-name">Staff Overrides</span><span class="m-val" style="color:var(--green)">61 events</span></div>
+      </div>
+    </div>
+
+    <div class="improvement-bars reveal">
+      <div class="imp-row">
+        <div class="imp-header"><span class="i-name">KPI 1 — Late Return Rate (LRR)</span><span class="i-pct">-50.4%</span></div>
+        <div class="imp-bar-bg"><div class="imp-bar-fill" style="width:50.4%" data-w="50.4"></div></div>
+        <div class="imp-vals"><span>Before: 23.0%</span><span class="v-after">After: 11.4%</span></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-header"><span class="i-name">KPI 2 — Reservation Disruption Rate (RDR)</span><span class="i-pct">-55.9%</span></div>
+        <div class="imp-bar-bg"><div class="imp-bar-fill" style="width:55.9%" data-w="55.9"></div></div>
+        <div class="imp-vals"><span>Before: 63.7%</span><span class="v-after">After: 28.1%</span></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-header"><span class="i-name">KPI 3 — Average Return Delay (ARD)</span><span class="i-pct">-64.7%</span></div>
+        <div class="imp-bar-bg"><div class="imp-bar-fill" style="width:64.7%" data-w="64.7"></div></div>
+        <div class="imp-vals"><span>Before: 51.5h</span><span class="v-after">After: 18.2h</span></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-header"><span class="i-name">KPI 4 — At-Risk Return Detection Rate (ARDR)</span><span class="i-pct">+64.9pp</span></div>
+        <div class="imp-bar-bg"><div class="imp-bar-fill" style="width:64.9%;background:linear-gradient(90deg,var(--purple),var(--teal))" data-w="64.9"></div></div>
+        <div class="imp-vals"><span>Before: 0% (no system)</span><span class="v-after">After: 64.9% — 155/239 late returns caught early</span></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-header"><span class="i-name">KPI 5 — Staff Override Rate (SOR)</span><span class="i-pct">-67.4%</span></div>
+        <div class="imp-bar-bg"><div class="imp-bar-fill" style="width:67.4%" data-w="67.4"></div></div>
+        <div class="imp-vals"><span>Before: 8.9% (187 events)</span><span class="v-after">After: 2.9% (61 events)</span></div>
+      </div>
+    </div>
+
+    <div class="callout green reveal" style="margin-top:32px">
+      <strong>Why did each KPI improve?</strong> LRR and RDR fell because ARDR rose — the At-Risk Monitor caught 155 of 239 eventual late returns <em>before</em> the due date, allowing staff to intervene in advance. ARD fell because Camping equipment received the highest risk score weight (Wc=4), meaning camping items are flagged earliest and staff contact borrowers with the most lead time. SOR fell because proactive flagging prevented situations that previously required manual staff resolution.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ETHICAL -->
+<section id="ethical" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 08 — Ethical & Social Considerations</div>
+      <h2>Responsibility in Data-Driven Operations</h2>
+    </div>
+    <div class="ethical-grid reveal">
+      <div class="ethical-card">
+        <div class="e-icon">🔒</div>
+        <h4>Data Privacy</h4>
+        <p>The system processes borrower contact details and transaction histories. A production deployment requires encryption at rest and in transit, role-based access control, and a clear data retention policy. This academic implementation uses fully synthetic data — no real personal information.</p>
+      </div>
+      <div class="ethical-card">
+        <div class="e-icon">⚖️</div>
+        <h4>Algorithmic Bias</h4>
+        <p>The risk score assigns higher weights to HUB5 and Camping equipment based on historical patterns. If those patterns reflect socioeconomic factors — e.g., a hub in a neighbourhood with transportation barriers — the system may disproportionately flag borrowers from that location. Production deployments must audit outcomes across demographic groups.</p>
+      </div>
+      <div class="ethical-card">
+        <div class="e-icon">♿</div>
+        <h4>Inclusion & Accessibility</h4>
+        <p>The dashboard and prototype are web-based, requiring a modern browser. The self-contained HTML files work offline, benefiting staff in low-connectivity locations. Accessibility features (screen reader compatibility, sufficient colour contrast) would be required additions before any live deployment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LESSONS -->
+<section id="lessons" style="background:var(--bg)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label">Section 09 — Lessons Learned & Team Reflection</div>
+      <h2>What We Built, What We Learned, What's Next</h2>
+    </div>
+    <div class="lessons-grid reveal">
+      <div>
+        <div class="lesson-card" style="margin-bottom:20px">
+          <h4>Most Important Analytical Lesson</h4>
+          <p>Our initial assumption that Tools would be the highest-risk equipment category was wrong. The data clearly showed Camping at 31.2% versus Tools at 23.1%. This required revising the DPAD template, dashboard chart labels, risk scoring weights, and all documentation. The experience reinforced: assumptions must always be tested against data before being embedded in a solution design.</p>
+        </div>
+        <div class="lesson-card" style="margin-bottom:20px">
+          <h4>The Value of Connecting Insight to Action</h4>
+          <p>The first version delivered only the dashboard. Adding the operational prototype — particularly the At-Risk Monitor — transformed the project from a reporting tool into a decision support system. That distinction is what produced the 67.4% SOR reduction: staff didn't just see the problem differently, they had a different workflow for acting on it (McKinsey, 2020).</p>
+        </div>
+        <div class="lesson-card">
+          <h4>Professor Feedback Changes Made</h4>
+          <p>Five concrete changes: (1) APA citations added to all 10 dataset generation rules. (2) Axis labels added to all 18 dashboard charts. (3) Plain-language insight callouts on every chart. (4) Dashboard restructured from a flat chart collection into a 6-tab narrative. (5) Data figures corrected and Camping correctly identified as highest-risk category.</p>
+        </div>
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:16px">Project Timeline</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Weeks 1–3: Problem Definition</h5><p>BorrowBox late-return problem identified, stakeholders mapped, problem statement written.</p></div></div>
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Weeks 4–7: Dataset Generation</h5><p>2,100-row synthetic dataset generated from 10 APA-cited rules. ERD designed and validated.</p></div></div>
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Weeks 7–10: Dashboard v1</h5><p>First dashboard build on GitHub Pages. DPAD template completed.</p></div></div>
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Week 10–11: Professor Feedback</h5><p>5 changes implemented. Dashboard fully rebuilt into 6-tab narrative with Canvas API.</p></div></div>
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Weeks 12–13: Prototype Built</h5><p>6-screen operational prototype with At-Risk Monitor replacing passive reminders.</p></div></div>
+          <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-content"><h5>Week 14: Before/After + Final Docs</h5><p>Tab 6 added to dashboard. All KPI targets achieved. Written report, charter, EA, KPI slides finalised.</p></div></div>
+        </div>
+        <div style="margin-top:24px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px">
+          <div class="label" style="margin-bottom:12px">Next Steps</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:.84rem;color:var(--muted);padding-left:16px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--teal)">→</span> Integrate with live reservation database for real-time ARDR computation</li>
+            <li style="font-size:.84rem;color:var(--muted);padding-left:16px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--teal)">→</span> Mobile push notifications for at-risk flags via the prototype</li>
+            <li style="font-size:.84rem;color:var(--muted);padding-left:16px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--teal)">→</span> 90-day live pilot with a municipal Library of Things program</li>
+            <li style="font-size:.84rem;color:var(--muted);padding-left:16px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--teal)">→</span> Accessibility audit (WCAG 2.1 compliance) before any public deployment</li>
+            <li style="font-size:.84rem;color:var(--muted);padding-left:16px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--teal)">→</span> Bias audit of the risk scoring formula across demographic groups</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="container">
+    <div class="section-header reveal" style="text-align:center">
+      <div class="label">The Team</div>
+      <h2>Group 3 — Saint Louis University</h2>
+    </div>
+    <div class="team-grid reveal">
+      <div class="team-card">
+        <div class="team-avatar" style="background:rgba(79,142,247,0.15);color:var(--blue)">P</div>
+        <h4>Parushuram Kalishetty</h4>
+        <div class="role">Project Manager</div>
+        <div class="tasks">Overall coordination · Project charter · Milestone tracking · Stakeholder communication</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:rgba(39,217,200,0.15);color:var(--teal)">L</div>
+        <h4>Lokesh Chavana</h4>
+        <div class="role">Business Analyst</div>
+        <div class="tasks">Requirements · Problem statement · Business case · Policy recommendations</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:rgba(247,201,72,0.15);color:var(--yellow)">J</div>
+        <h4>Joel Abhishek Dasari</h4>
+        <div class="role">Data Analyst</div>
+        <div class="tasks">Dataset generation · Statistical analysis · APA citations · Before/After computation</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:rgba(155,127,247,0.15);color:var(--purple)">M</div>
+        <h4>Mani Teja Budda</h4>
+        <div class="role">Technical Lead</div>
+        <div class="tasks">Dashboard development · Canvas API · GitHub Pages · Enterprise architecture</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:rgba(240,79,79,0.15);color:var(--red)">S</div>
+        <h4>Sharmila</h4>
+        <div class="role">Prototype & Documentation</div>
+        <div class="tasks">Operational prototype · Feature guide · Comprehensive docs · RACI matrix</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;font-size:.85rem;color:var(--dim)" class="reveal">
+      Instructor: <strong style="color:var(--muted)">Dr. Tatiana Cardona</strong> &nbsp;·&nbsp; IS 5960 Master Research Project &nbsp;·&nbsp; Spring 2026
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Borrow<span>Box</span></div>
+  <p>City-Wide Shared Equipment Lending Analytics System</p>
+  <p>Group 3 · Saint Louis University · IS 5960 · Dr. Tatiana Cardona · April 2026</p>
+  <div class="f-links">
+    <a href="https://parushuramkalishetty.github.io/mrpdashboard" target="_blank">Live Dashboard</a>
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#comparison">Results</a>
+    <a href="#team">Team</a>
+  </div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── SCROLL REVEAL ───────────────────────────────────────
+  try {
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+  } catch(e) { console.warn('Reveal observer:', e); }
+
+  // ── IMPROVEMENT BAR ANIMATION ───────────────────────────
+  try {
+    // Set all bars to 0 initially
+    document.querySelectorAll('.imp-bar-fill').forEach(function(f) {
+      f.style.width = '0%';
+    });
+    var barObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.imp-bar-fill').forEach(function(f) {
+            var w = parseFloat(f.getAttribute('data-w') || '0');
+            setTimeout(function() { f.style.width = w + '%'; }, 250);
+          });
+          barObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.improvement-bars').forEach(function(el) {
+      barObserver.observe(el);
+    });
+  } catch(e) { console.warn('Bar observer:', e); }
+
+  // ── EA IMAGE FALLBACK (safe — no recursive onerror) ─────
+  try {
+    var eaImg = document.getElementById('ea-img');
+    if (eaImg) {
+      var eaFailed = false;
+      eaImg.addEventListener('error', function() {
+        if (eaFailed) return;
+        eaFailed = true;
+        var parent = eaImg.parentElement;
+        if (parent) {
+          parent.innerHTML = '<div style="padding:40px 24px;text-align:center;color:var(--muted);font-size:.9rem;line-height:1.7">Enterprise Architecture Diagram<br><span style="font-size:.8rem;color:var(--dim)">5-layer model: Users · Interface · Application · Data · Infrastructure<br>Full diagram available in the written report appendix and the EA PNG file.</span></div>';
+        }
+      });
+    }
+  } catch(e) { console.warn('EA img:', e); }
+
+  // ── IFRAME FALLBACK ─────────────────────────────────────
+  try {
+    var iframe = document.getElementById('dash-iframe');
+    var fallback = document.querySelector('.embed-fallback');
+    if (iframe && fallback) {
+      // Show fallback link after 8 seconds if iframe hasn't loaded
+      var timer = setTimeout(function() {
+        // Only show fallback if iframe body is empty (cross-origin blocked)
+        if (fallback) {
+          fallback.style.display = 'flex';
+        }
+      }, 8000);
+      iframe.addEventListener('load', function() {
+        clearTimeout(timer);
+        // iframe loaded — hide fallback
+        if (fallback) fallback.style.display = 'none';
+      });
+    }
+  } catch(e) { console.warn('iframe:', e); }
+
+  // ── NAV ACTIVE ON SCROLL ────────────────────────────────
+  try {
+    var sections = Array.from(document.querySelectorAll('section[id]'));
+    var navLinks = document.querySelectorAll('.nav-links a');
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function() {
+        var current = '';
+        var scrollY = window.scrollY;
+        sections.forEach(function(s) {
+          if (scrollY >= s.offsetTop - 140) current = s.id;
+        });
+        navLinks.forEach(function(a) {
+          a.style.color = a.getAttribute('href') === '#' + current ? 'var(--teal)' : '';
+        });
+        ticking = false;
+      });
+    });
+  } catch(e) { console.warn('Nav scroll:', e); }
+
+})();
+</script>
+
+</body>
+</html>
